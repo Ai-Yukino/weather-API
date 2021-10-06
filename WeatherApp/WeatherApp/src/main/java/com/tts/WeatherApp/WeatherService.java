@@ -1,5 +1,6 @@
 package com.tts.WeatherApp;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -10,6 +11,9 @@ public class WeatherService {
     @Value("${api_key}")
     private String apiKey;
 
+    @Autowired
+    private ZipCodesRepository repo;
+
     public Response getForecast(String zipCode) {
 
         try {
@@ -17,9 +21,7 @@ public class WeatherService {
                     zipCode + "&units=imperial&appid=" + apiKey;
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate.getForObject(url, Response.class);
-        }
-
-        catch (HttpClientErrorException ex) {
+        } catch (HttpClientErrorException ex) {
             Response response = new Response();
             response.setName("error");
             return response;
